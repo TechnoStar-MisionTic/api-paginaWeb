@@ -2,17 +2,10 @@
 // const express = require('express')
 //nueva forma de exportar aún en preview
 import Express from "express";
-import { MongoClient, ObjectId } from "mongodb";
+
 import Cors from "cors";
-
-const stringConnection =
-  "mongodb+srv://aninot:un3022077849@proyectoweb.gsl81.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const client = new MongoClient(stringConnection, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-let conexion;
+import dotenv from "dotenv";
+import { conectarBD, getDB } from "./bd/bd.js";
 
 const app = Express();
 
@@ -21,6 +14,7 @@ app.use(Cors());
 
 app.get("/registroProductos", (req, res) => {
   console.log("Someone use get on /registro");
+  const conexion=getDB()
   conexion
     .collection("producto")
     .find({})
@@ -45,6 +39,7 @@ app.post("/registroProductos/nuevo", (req, res) => {
       Object.keys(datosProducto).includes("cantidad")
     ) {
       //codigo para crear producto en la bd
+      const conexion=getDB()
       conexion
         .collection("producto")
         .insertOne(datosProducto, (err, result) => {
@@ -72,6 +67,7 @@ app.patch("/registroProductos/editar", (req, res) => {
   const operacion = {
     $set: edicion,
   };
+  const conexion=getDB()
   conexion
     .collection("producto")
     .findOneAndUpdate(
@@ -92,6 +88,7 @@ app.patch("/registroProductos/editar", (req, res) => {
 
 app.delete("/registroProductos/eliminar",(req,res) =>{
   const filtroProducto = { _id: new ObjectId(req.body.id) };
+  const conexion=getDB()
   conexion.collection("producto").deleteOne(filtroProducto,(err,result)=>{
     if(err){
       console.error("Error borrando: ",err)
@@ -102,18 +99,11 @@ app.delete("/registroProductos/eliminar",(req,res) =>{
     }
   })
 });
+
 const main = () => {
-  client.connect((err, db) => {
-    if (err) {
-      console.error("Error conenctando a la base de datos");
-      return "error";
-    }
-    conexion = db.db("paginaWeb");
-    console.log("Conexion exitosa");
-    app.listen(5000, () => {
-      console.log("listen port 5000");
-    });
+  return app.listen(process.env.PORT, () => {
+    console.log(`Listen port ${process.env.PORT}`);
   });
 };
 
-main();
+conectarBD(main);
