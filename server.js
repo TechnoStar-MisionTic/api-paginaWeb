@@ -11,6 +11,8 @@ import rutasVentas from "./views/ventas/rutas.js";
 
 const app = Express();
 
+const port =process.env.PORT || 3000;
+
 app.use(Express.json());
 app.use(Cors());
 app.use(rutasProductos)
@@ -18,8 +20,8 @@ app.use(rutasVentas)
 
 
 const main = () => {
-  return app.listen(process.env.PORT, () => {
-    console.log(`Listen port ${process.env.PORT}`);
+  return app.listen(port, () => {
+    console.log(`Listen port ${port}`);
   });
 };
 
