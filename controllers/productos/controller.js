@@ -21,9 +21,8 @@ const crearProducto = async (datosProducto, callback) => {
   }
 };
 
-const editarProducto = async (edicion, callback) => {
-  const filtroProducto = { _id: new ObjectId(edicion.id) };
-  delete edicion.id;
+const editarProducto = async (id, edicion, callback) => {
+  const filtroProducto = { _id: new ObjectId(id) };
   const operacion = {
     $set: edicion,
   };
@@ -41,7 +40,7 @@ const editarProducto = async (edicion, callback) => {
 const eliminarProductos = async (producto,callback) =>{
     const filtroProducto = { _id: new ObjectId(producto.id) };
     const conexion=getDB()
-    conexion.collection("producto").deleteOne(filtroProducto,callback)
+    await conexion.collection("producto").deleteOne(filtroProducto,callback)
 }
 
 export { queryAllProducts, crearProducto, editarProducto, eliminarProductos };

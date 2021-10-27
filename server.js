@@ -7,12 +7,14 @@ import Cors from "cors";
 import dotenv from "dotenv";
 import { conectarBD} from "./bd/bd.js";
 import rutasProductos from "./views/productos/rutas.js";
+import rutasVentas from "./views/ventas/rutas.js";
 
 const app = Express();
 
 app.use(Express.json());
 app.use(Cors());
 app.use(rutasProductos)
+app.use(rutasVentas)
 
 
 const main = () => {
